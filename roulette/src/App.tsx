@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import Roulette from './components/Roulette';
 
@@ -30,6 +30,20 @@ const App: React.FC = () => {
     setSelectedItem(selected);
     setShowResult(true);
   };
+
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+    
+    if (showResult) {
+      timer = setTimeout(() => {
+        setShowResult(false);
+      }, 5000); // 5초 후에 결과 메시지 숨기기
+    }
+    
+    return () => {
+      clearTimeout(timer); // 컴포넌트가 언마운트되거나 showResult가 변경될 때 타이머 정리
+    };
+  }, [showResult]);
 
   return (
     <div className="wrap">

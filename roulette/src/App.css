@@ -479,14 +479,20 @@ h1 {
 }
 
 .result-message {
+  position: absolute;
+  margin: 0 auto;
+  bottom: 20px;
+  z-index: 10;
   margin-top: 20px;
   padding: 15px 25px;
   background-color: white;
   border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   font-size: 24px;
   font-weight: bold;
   color: #333;
+  text-align: center;
+  width: auto;
   animation: fadeIn 0.5s ease forwards;
 }
 

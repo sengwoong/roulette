@@ -98,10 +98,7 @@ const Roulette: React.FC<RouletteProps> = ({ prizeData, onSpinEnd }) => {
       
       // 텍스트 회전 조정 - 항상 바깥쪽을 향하도록
       let textRotation = midRadian;
-      // 아래쪽 반원에 있는 텍스트는 180도 추가 회전
-      if (angle.midAngle > 90 && angle.midAngle < 270) {
-        textRotation += Math.PI;
-      }
+   
       ctx.rotate(textRotation + Math.PI / 2);
       
       ctx.textAlign = 'center';
