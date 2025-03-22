@@ -9,7 +9,6 @@ const Layout: React.FC = () => {
   return (
     <div>
       <header className="main-header">
-        <h1>미니 게임 모음</h1>
         <nav>
           <Link to="/roulette" className="nav-link">룰렛</Link>
           <Link to="/zombie" className="nav-link">좀비 디펜스</Link>
@@ -36,7 +35,7 @@ const NotFound: React.FC = () => {
 const App: React.FC = () => {
   return (
     <BrowserRouter>
-      <div className="app-container">
+
         <Routes>
           {/* 공통 레이아웃을 적용하는 중첩 라우트 */}
           <Route element={<Layout />}>
@@ -50,7 +49,7 @@ const App: React.FC = () => {
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
-      </div>
+
     </BrowserRouter>
   );
 };
