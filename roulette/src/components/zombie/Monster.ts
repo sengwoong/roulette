@@ -26,6 +26,7 @@ export class Monster extends GameObject {
   private animatedSprite: PIXI.AnimatedSprite;
   private healthBar: PIXI.Graphics;
   private id: number;
+  private hasReachedRight: boolean = false;
 
   constructor(
     app: PIXI.Application, 
@@ -151,5 +152,34 @@ export class Monster extends GameObject {
   // ID 반환
   public getId(): number {
     return this.id;
+  }
+
+  // Monster 클래스에 화면 경계 체크 메서드 추가
+  public checkBoundary(): boolean {
+    // 현재 프레임에서 경계를 막 넘었는지 확인 (위치 변경 전에 체크)
+    const justCrossed = this.position.x > this.app.screen.width && 
+                       this.position.x <= this.app.screen.width + this.speed;
+    
+    return justCrossed;
+  }
+
+  // x 좌표 getter
+  public getX(): number {
+    return this.position.x;
+  }
+
+  // x 좌표 setter
+  public setX(x: number): void {
+    this.position.x = x;
+  }
+
+  // 오른쪽 도달 플래그 getter
+  public getHasReachedRight(): boolean {
+    return this.hasReachedRight;
+  }
+
+  // 오른쪽 도달 플래그 setter
+  public setHasReachedRight(value: boolean): void {
+    this.hasReachedRight = value;
   }
 } 

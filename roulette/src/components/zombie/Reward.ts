@@ -23,8 +23,9 @@ export class Reward extends GameObject {
   private collected: boolean = false;
   private floatAnimation: boolean = true;
   private initialY: number;
+  private id: number;
 
-  constructor(app: PIXI.Application, sprite: PIXI.Sprite, config: RewardConfig, x: number, y: number) {
+  constructor(app: PIXI.Application, sprite: PIXI.Sprite, config: RewardConfig, x: number, y: number, id: number = 0) {
     super(app, sprite, x, y);
     
     this.rewardSprite = sprite;
@@ -32,6 +33,7 @@ export class Reward extends GameObject {
     this.value = config.value;
     this.duration = config.duration || 0;
     this.initialY = y;
+    this.id = id || Math.floor(Math.random() * 10000);
     
     // 스프라이트 앵커 설정
     this.rewardSprite.anchor.set(0.5);
@@ -79,5 +81,13 @@ export class Reward extends GameObject {
 
   public isCollected(): boolean {
     return this.collected;
+  }
+
+  public setClickHandler(handler: () => void): void {
+    this.sprite.on('pointerdown', handler);
+  }
+
+  public getId(): number {
+    return this.id;
   }
 } 

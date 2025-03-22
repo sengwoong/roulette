@@ -21,6 +21,7 @@ export class GameManager {
   private score: number = 0;
   private onScoreChange: (score: number) => void;
   private spawnTimers: { monster: number; reward: number } = { monster: 0, reward: 0 };
+  private onMonsterReachedBoundary: ((damage: number) => void) | null = null;
 
   constructor(app: PIXI.Application, config: GameConfig, onScoreChange: (score: number) => void) {
     this.app = app;
@@ -73,8 +74,11 @@ export class GameManager {
     const x = Math.random() * this.app.screen.width;
     const y = Math.random() * (this.app.screen.height - 100) + 50;
     
-    // 보상 생성
-    const reward = new Reward(this.app, sprite, config, x, y);
+    // 보상 ID 생성
+    const rewardId = this.rewards.length + 1;
+    
+    // 보상 생성 (ID 전달)
+    const reward = new Reward(this.app, sprite, config, x, y, rewardId);
     
     // 배열에 추가
     this.rewards.push(reward);
@@ -122,6 +126,27 @@ export class GameManager {
     // 맵 업데이트
     if (this.gameMap) {
       this.gameMap.update(delta.deltaTime);
+    }
+    
+    // 몬스터 경계 체크 - 삭제하지 않고 데미지만 적용
+    for (let i = this.monsters.length - 1; i >= 0; i--) {
+      const monster = this.monsters[i];
+      
+      // 몬스터가 활성화 상태인 경우만 체크
+      if (monster.isActive()) {
+        // 업데이트 실행
+        monster.update(delta.deltaTime);
+        
+        // 화면 오른쪽 경계 도달 체크
+        if (monster.checkBoundary()) {
+          // 몬스터 데미지만큼 포인트 차감 이벤트 발생
+          if (this.onMonsterReachedBoundary) {
+            this.onMonsterReachedBoundary(monster.getDamage());
+          }
+          
+          // 몬스터는 삭제하지 않음 - 이미 Monster.update에서 다시 왼쪽으로 이동시킴
+        }
+      }
     }
     
     // 모든 게임 객체 업데이트
@@ -198,7 +223,7 @@ export class GameManager {
   // 보상 클릭 핸들러 설정
   public setRewardClickHandler(handler: (reward: {id: number, value: number}) => void): void {
     this.rewards.forEach(reward => {
-      reward.sprite.on('pointerdown', () => {
+      reward.setClickHandler(() => {
         handler({
           id: reward.getId(),
           value: reward.getValue()
@@ -225,5 +250,15 @@ export class GameManager {
       // 리소스 정리
       reward.destroy();
     }
+  }
+
+  // 경계 도달 콜백 설정 메서드
+  public setMonsterReachedBoundaryHandler(handler: (damage: number) => void): void {
+    this.onMonsterReachedBoundary = handler;
+  }
+
+  // 활성 몬스터 목록 가져오기
+  getActiveMonsters() {
+    return this.monsters.filter(m => m.isActive());
   }
 } 
